@@ -3,7 +3,21 @@ interface BmiValues{
     weightKg: number;
 }
 
-export const parseBmiArguments = (
+export const parseBmiArgumentsRequest = (
+    heightCm: string,
+    weightKg: string
+): BmiValues => {
+    if (!isNaN(Number(heightCm)) && !isNaN(Number(weightKg))){
+        return {
+            heightCm: Number(heightCm),
+            weightKg: Number(weightKg)
+        };
+    }else{
+        throw new Error('malformatted height or weight');   
+    }
+};
+
+const parseBmiArguments = (
     args: Array<string>
 ): BmiValues => {
     if (args.length < 4) throw new Error('Not enough arguments');
