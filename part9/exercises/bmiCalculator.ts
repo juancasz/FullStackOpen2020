@@ -62,9 +62,9 @@ export const calculateBmi = (
 
 try{
     const{heightCm,weightKg} = parseBmiArguments(process.argv);
-    console.log(calculateBmi(heightCm, weightKg))
+    console.log(calculateBmi(heightCm, weightKg));
 }catch(error: unknown){
-    let errorMessage = 'Something bad happened.'
+    let errorMessage = 'Something bad happened.';
     if (error instanceof Error) {
       errorMessage += ' Error: ' + error.message;
     }

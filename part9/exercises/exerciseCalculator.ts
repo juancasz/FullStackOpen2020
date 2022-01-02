@@ -1,19 +1,40 @@
-interface ExerciseValues {
+export interface ExerciseValues {
     target: number;
     dailyExerciseHours: Array<number>;
+}
+
+export const validateExerciseArguments = (
+    input: ExerciseValues
+) => {
+    if (isNaN(input.target)){
+        throw new Error('invalid target value');
+    }
+
+    if (!Array.isArray(input.dailyExerciseHours)){
+        throw new Error('invalid exercise hours');
+    }
+
+    input.dailyExerciseHours.forEach((dayHours,day) => {
+        if (isNaN(Number(dayHours))){
+            throw new Error(`Hours reported in day ${day} are not a number`);
+        }
+    });
 };
+
 
 export const parseExerciseArguments = (
     args: Array<string>
 ): ExerciseValues => {
-    if (args.length < 3) throw new Error('Not enough arguments');
+    if (args.length < 3){
+        throw new Error('Not enough arguments');
+    } 
 
     const exerciseValues = <ExerciseValues>{};
 
     if (!isNaN(Number(args[2]))){
         exerciseValues.target = Number(args[2]);
     }else{
-        throw new Error('Target hours is not a number');   
+        throw new Error('Target hours is not a number');  
     }
 
     exerciseValues.dailyExerciseHours = [] as Array<number>;
@@ -28,7 +49,7 @@ export const parseExerciseArguments = (
     return exerciseValues;
 };
 
-interface AverageValues {
+export interface AverageValues {
     periodLength: number,
     trainingDays: number,
     target: number,
@@ -36,7 +57,7 @@ interface AverageValues {
     success: boolean,
     rating: number,
     ratingDescription: string,
-};
+}
 
 export const calculateExercises = (
     target: number,
@@ -80,7 +101,7 @@ try{
     const{target,dailyExerciseHours}=parseExerciseArguments(process.argv);
     console.log(calculateExercises(target,dailyExerciseHours));
 }catch(error:unknown){
-    let errorMessage = 'Something bad happened.'
+    let errorMessage = 'Something bad happened.';
     if (error instanceof Error) {
       errorMessage += ' Error: ' + error.message;
     }
