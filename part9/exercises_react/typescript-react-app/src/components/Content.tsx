@@ -1,10 +1,10 @@
 import React from "react";
 import { Part } from "../types";
+import PartComponent from "./Part";
 
 const Content = ({parts}:{parts:Part[]}):JSX.Element => {
     const list = parts.map((part,key) => {
-        return <p key={key}> {part.name} {part.exerciseCount}</p>
-        
+        return <PartComponent part={part} key={key} />
     });
 
     return(
