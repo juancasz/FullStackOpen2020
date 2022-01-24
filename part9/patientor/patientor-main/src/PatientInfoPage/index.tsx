@@ -1,18 +1,25 @@
 import axios from "axios";
 import React from "react";
 import { apiBaseUrl } from "../constants";
-import { addPatient, useStateValue } from "../state";
+import { addPatient, setDiagnosisList, useStateValue } from "../state";
 import { useParams } from "react-router-dom";
-import { Entry, Patient } from "../types";
+import { Diagnosis, Entry, Patient } from "../types";
 import { Icon } from "semantic-ui-react";
 import { Gender } from "../types";
 
 const PatientInfoPage = () => {
-    const [{ patients }, dispatch] = useStateValue();
+    const [{ patients,diagnosis }, dispatch] = useStateValue();
     const { id } = useParams<{ id: string }>();
     const[patient,setPatient] = React.useState<Patient|undefined>(undefined);
 
     React.useEffect(() => {
+        const getDiagnosisList = async () => {
+            const { data: diagnosisListFromApi } = await axios.get<Diagnosis[]>(
+                `${apiBaseUrl}/diagnoses`
+            );
+            dispatch(setDiagnosisList(diagnosisListFromApi));
+        };
+
         const getPatient = async (id:string) => {
             try{
                 const{data: patientFromApi} = await axios.get<Patient>(
@@ -34,6 +41,10 @@ const PatientInfoPage = () => {
         }else{
             setPatient(patient);
         }
+
+        if (Object.keys(diagnosis).length===0){
+            void getDiagnosisList();
+        }
     },[dispatch]);
     
     if(!patient){
@@ -43,7 +54,7 @@ const PatientInfoPage = () => {
     }
 
     const Entries = () => {
-       if(patient.entries){
+       if(patient.entries && patient.entries.length>0){
            return(
                <div>
                     <h3>entries</h3>
@@ -52,7 +63,7 @@ const PatientInfoPage = () => {
                             <p>{entry.date} {entry.description}</p>
                             <ul>
                                 {entry.diagnosisCodes?.map((code) => (
-                                    <li key={code}>{code}</li>
+                                    <li key={code}>{code} {diagnosis[code]?diagnosis[code].name:""}</li>
                                 ))}
                             </ul>
                         </div>
