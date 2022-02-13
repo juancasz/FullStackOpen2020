@@ -4,8 +4,9 @@ import { apiBaseUrl } from "../constants";
 import { addPatient, setDiagnosisList, useStateValue } from "../state";
 import { useParams } from "react-router-dom";
 import { Diagnosis, Entry, Patient } from "../types";
-import { Icon } from "semantic-ui-react";
 import { Gender } from "../types";
+import { Message,Icon } from "semantic-ui-react";
+
 
 const PatientInfoPage = () => {
     const [{ patients,diagnosis }, dispatch] = useStateValue();
@@ -58,16 +59,51 @@ const PatientInfoPage = () => {
            return(
                <div>
                     <h3>entries</h3>
-                    {patient.entries.map((entry:Entry) => (
-                        <div key={entry.id}>
-                            <p>{entry.date} {entry.description}</p>
-                            <ul>
-                                {entry.diagnosisCodes?.map((code) => (
-                                    <li key={code}>{code} {diagnosis[code]?diagnosis[code].name:""}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
+                    {patient.entries.map((entry:Entry) => {
+                        switch (entry.type){
+                            case "Hospital":
+                                return (
+                                    <Message>
+                                        <p>{entry.date}   <Icon name='hospital' size="big"/></p>
+                                        <p>{entry.description}</p>
+                                        <ul>
+                                            {entry.diagnosisCodes?.map((code) => (
+                                                <li key={code}>{code} {diagnosis[code]?diagnosis[code].name:""}</li>
+                                            ))}
+                                        </ul>
+                                        <Icon name='heart' color='red'/>
+                                    </Message>
+                                );
+                            case "OccupationalHealthcare":
+                                return (
+                                    <Message>
+                                        <p>{entry.date} <Icon name='factory' size="big"/></p>
+                                        <p>{entry.description}</p>
+                                        <ul>
+                                            {entry.diagnosisCodes?.map((code) => (
+                                                <li key={code}>{code} {diagnosis[code]?diagnosis[code].name:""}</li>
+                                            ))}
+                                        </ul>
+                                        <Icon name='heart' color='green'/>
+                                    </Message>
+                                );
+                            case "HealthCheck":
+                                return (
+                                    <Message>
+                                        <p>{entry.date} <Icon name='fork' size="big"/></p>
+                                        <p>{entry.description}</p>
+                                        <ul>
+                                            {entry.diagnosisCodes?.map((code) => (
+                                                <li key={code}>{code} {diagnosis[code]?diagnosis[code].name:""}</li>
+                                            ))}
+                                        </ul>
+                                        <Icon name='heart' color='blue'/>
+                                    </Message>
+                                );
+                            default:
+                                return <></>;
+                        }
+                    })}
                </div>
            );
        }
