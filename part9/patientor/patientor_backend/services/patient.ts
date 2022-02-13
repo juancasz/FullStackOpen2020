@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {v4 as uuidv4} from 'uuid';
 import patientsData from "../data/patients";
-import { PublicPatient,NewPatient,Patient,Entry } from "../models/types";
+import { PublicPatient,NewPatient,Patient,Entry, NewEntry, HospitalEntry, HealthCheckEntry, OccupationalHealthcareEntry } from "../models/types";
 
 const getAllPublicPatients = (): PublicPatient[] => {
     const publicPatientsData:PublicPatient[] = patientsData.map(
@@ -23,8 +23,39 @@ const getPatientInfo = (id: string ): Patient|undefined => {
    return patient;
 };
 
+const addPatientEntry = (patientId:string ,newEntry: NewEntry): Entry => {
+    const index =patientsData.findIndex(patient => patient.id === patientId);
+
+    if (index === -1){
+        throw new Error("Patient not found");
+    }
+
+    var newEntryObj: Entry;
+
+    switch(newEntry.type){
+        case "HealthCheck":
+            newEntryObj = {...newEntry,id: uuidv4()} as HealthCheckEntry;
+            break;
+        case "Hospital":
+            newEntryObj = {...newEntry,id: uuidv4()} as HospitalEntry;
+            break;
+        case "OccupationalHealthcare":
+            newEntryObj = {...newEntry,id: uuidv4()} as OccupationalHealthcareEntry;
+            break;
+        default:
+            throw new Error("Invalid type entry");
+    }
+
+    const updatedPatient = patientsData[index];
+    updatedPatient.entries.push(newEntryObj);
+    patientsData[index] = updatedPatient;
+
+    return newEntryObj;
+};
+
 export default {
     getAllPublicPatients,
     AddNewPatient,
-    getPatientInfo
+    getPatientInfo,
+    addPatientEntry
 };
