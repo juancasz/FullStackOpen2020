@@ -5,13 +5,22 @@ import { addPatient, setDiagnosisList, useStateValue } from "../state";
 import { useParams } from "react-router-dom";
 import { Diagnosis, Entry, Patient } from "../types";
 import { Gender } from "../types";
-import { Message,Icon } from "semantic-ui-react";
+import { Message,Icon,Button } from "semantic-ui-react";
+import AddEntryModal from "../AddEntryModal";
 
 
 const PatientInfoPage = () => {
     const [{ patients,diagnosis }, dispatch] = useStateValue();
     const { id } = useParams<{ id: string }>();
     const[patient,setPatient] = React.useState<Patient|undefined>(undefined);
+
+    const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+
+    const openModal = (): void => setModalOpen(true);
+
+    const closeModal = (): void => {
+      setModalOpen(false);
+    };
 
     React.useEffect(() => {
         const getDiagnosisList = async () => {
@@ -131,6 +140,11 @@ const PatientInfoPage = () => {
             <br/>
             <br/>
             <Entries/>
+            <AddEntryModal
+                modalOpen={modalOpen}
+                onClose={closeModal}
+            />
+            <Button style={{marginTop: "1rem"}} onClick={() => openModal()}>Add New Entry</Button>
         </div>
     );
 };
