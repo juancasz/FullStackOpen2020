@@ -1,3 +1,4 @@
+//comment test github account
 export interface Diagnosis {
   code: string;
   name: string;
