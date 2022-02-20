@@ -62,13 +62,6 @@ const PatientInfoPage = () => {
     };
 
     React.useEffect(() => {
-        const getDiagnosisList = async () => {
-            const { data: diagnosisListFromApi } = await axios.get<Diagnosis[]>(
-                `${apiBaseUrl}/diagnoses`
-            );
-            dispatch(setDiagnosisList(diagnosisListFromApi));
-        };
-
         const getPatient = async (id:string) => {
             try{
                 const{data: patientFromApi} = await axios.get<Patient>(
@@ -90,7 +83,15 @@ const PatientInfoPage = () => {
         }else{
             setPatient(patient);
         }
+    },[patients]);
 
+    React.useEffect(() => {
+        const getDiagnosisList = async () => {
+            const { data: diagnosisListFromApi } = await axios.get<Diagnosis[]>(
+                `${apiBaseUrl}/diagnoses`
+            );
+            dispatch(setDiagnosisList(diagnosisListFromApi));
+        };
         if (Object.keys(diagnosis).length===0){
             void getDiagnosisList();
         }
