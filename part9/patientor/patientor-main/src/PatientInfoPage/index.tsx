@@ -7,7 +7,7 @@ import { Diagnosis, Entry, Patient } from "../types";
 import { Gender } from "../types";
 import { Message,Icon,Button } from "semantic-ui-react";
 import AddEntryModal from "../AddEntryModal";
-import { HospitalEntryFormValues } from "../AddEntryModal/AddHospitalEntryForm";
+import { NewEntryFormValue } from "../AddEntryModal";
 import { NewEntryPayload } from "../AddEntryModal";
 import { addEntry } from "../state";
 
@@ -26,9 +26,8 @@ const PatientInfoPage = () => {
       setModalOpen(false);
     };
 
-    const submitHospitalEntry = async (values: HospitalEntryFormValues) => {
+    const submitNewEntry = async (values: NewEntryFormValue) => {
         try {
-          console.log(values);
           const { data: newEntry } = await axios.post<Entry>(
             `${apiBaseUrl}/patients/${id}/entries`,
             values
@@ -41,7 +40,7 @@ const PatientInfoPage = () => {
           console.error(e.response?.data || 'Unknown Error');
           setError(e.response?.data?.error || 'Unknown error');
         }
-      };
+    };
 
     React.useEffect(() => {
         const getDiagnosisList = async () => {
@@ -165,7 +164,7 @@ const PatientInfoPage = () => {
                 modalOpen={modalOpen}
                 onClose={closeModal}
                 error={error}
-                submitHospitalEntry={submitHospitalEntry}
+                submitNewEntry={submitNewEntry}
             />
             <Button style={{marginTop: "1rem"}} onClick={() => openModal()}>Add New Entry</Button>
         </div>

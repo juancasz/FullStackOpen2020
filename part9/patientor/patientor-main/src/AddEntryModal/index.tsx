@@ -3,11 +3,14 @@ import { Modal,Dropdown,DropdownProps,Segment } from 'semantic-ui-react';
 import { Entry, TypeEntry} from '../types';
 import { EntryTypeOption } from "./FormField";
 import { AddHospitalEntryForm ,HospitalEntryFormValues} from "./AddHospitalEntryForm";
+import { AddHealthCheckEntryForm,HealthCheckEntryFormValues } from "./AddHealthCheckEntryForm";
 
 export interface NewEntryPayload {
   entry: Entry
   patientId: string
 }
+
+export type NewEntryFormValue = HealthCheckEntryFormValues | HospitalEntryFormValues;
 
 const entryOptions: EntryTypeOption[] = [
   {key: TypeEntry.Hospital, text:TypeEntry.Hospital,value:TypeEntry.Hospital},
@@ -24,10 +27,10 @@ interface Props {
     modalOpen: boolean;
     onClose: () => void;
     error?:string;
-    submitHospitalEntry: (values: HospitalEntryFormValues) => void;
+    submitNewEntry: (values: NewEntryFormValue) => void;
 }
 
-const AddEntryModal = ({submitHospitalEntry,error,modalOpen, onClose }: Props) => {
+const AddEntryModal = ({submitNewEntry,error,modalOpen, onClose }: Props) => {
     const [type, setType] = React.useState<TypeEntry|undefined>(undefined);
 
     const handleChangeType = (    
@@ -40,9 +43,9 @@ const AddEntryModal = ({submitHospitalEntry,error,modalOpen, onClose }: Props) =
     const TypeForm = ({type}:PropsType) => {
       switch(type){
         case TypeEntry.HealthCheck:
-          return <div>HealthCheck</div>;
+          return <AddHealthCheckEntryForm onSubmit={submitNewEntry} onCancel={onClose}/>;
         case TypeEntry.Hospital:
-          return <AddHospitalEntryForm  onSubmit={submitHospitalEntry} onCancel={onClose}/>;
+          return <AddHospitalEntryForm  onSubmit={submitNewEntry} onCancel={onClose}/>;
         case TypeEntry.OccupationalHealthcare:
           return <div>OccupationalHealthcare</div>;
         default:

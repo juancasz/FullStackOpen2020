@@ -1,28 +1,28 @@
 import React from "react";
-import { HospitalEntry,Discharge } from "../types";
+import { HealthCheckEntry } from "../types";
 import { Field, Formik, Form } from "formik";
-import { TextField,DiagnosisSelection } from "../AddPatientModal/FormField";
+import { TextField,DiagnosisSelection, NumberField } from "../AddPatientModal/FormField";
 import { Grid, Button } from "semantic-ui-react";
 import { useStateValue } from "../state";
 
-export type HospitalEntryFormValues = Omit<HospitalEntry,"id"> ;
+export type HealthCheckEntryFormValues = Omit<HealthCheckEntry,"id"> ;
 
 interface Props {
-    onSubmit: (values: HospitalEntryFormValues) => void;
+    onSubmit: (values: HealthCheckEntryFormValues) => void;
     onCancel: () => void;
 }
 
-export const AddHospitalEntryForm = ({ onSubmit, onCancel } : Props ) => {
+export const AddHealthCheckEntryForm = ({ onSubmit, onCancel } : Props ) => {
     const [{ diagnosis }] = useStateValue();
     return(
         <Formik
             initialValues={{
-                type: "Hospital",
+                type: "HealthCheck",
                 description: "",
                 date: "",
                 specialist: "",
                 diagnosisCodes: [],
-                discharge: {} as Discharge,
+                healthCheckRating: 0
             }}
             onSubmit={onSubmit}
             validate={values => {
@@ -37,11 +37,8 @@ export const AddHospitalEntryForm = ({ onSubmit, onCancel } : Props ) => {
                 if (!values.specialist) {
                   errors.specialist = requiredError;
                 }
-                if (!values.discharge.date) {
-                    errors.dateDischarge = requiredError;
-                }
-                if (!values.discharge.criteria) {
-                    errors.criteriaDischarge = requiredError;
+                if (!values.healthCheckRating) {
+                    errors.healthCheckRating = requiredError;
                 }
                 return errors;
             }}
@@ -73,16 +70,11 @@ export const AddHospitalEntryForm = ({ onSubmit, onCancel } : Props ) => {
                             diagnoses={Object.values(diagnosis)}          
                         />   
                         <Field
-                            label="dateDischarge"
-                            placeholder="YYYY-MM-DD"
-                            name="discharge.date"
-                            component={TextField}
-                        />
-                        <Field
-                            label="criteriaDischarge"
-                            placeholder="criteria discharge"
-                            name="discharge.criteria"
-                            component={TextField}
+                            label="health Check rating"
+                            name="healthCheckRating"
+                            component={NumberField}
+                            min={0}
+                            max={3}
                         />
                         <Grid>
                             <Grid.Column floated="left" width={5}>
@@ -108,4 +100,3 @@ export const AddHospitalEntryForm = ({ onSubmit, onCancel } : Props ) => {
 
     );
 };
-
