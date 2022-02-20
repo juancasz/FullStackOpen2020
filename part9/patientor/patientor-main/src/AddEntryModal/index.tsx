@@ -4,7 +4,7 @@ import { Entry, TypeEntry} from '../types';
 import { EntryTypeOption } from "./FormField";
 import { AddHospitalEntryForm ,HospitalEntryFormValues} from "./AddHospitalEntryForm";
 import { AddHealthCheckEntryForm,HealthCheckEntryFormValues } from "./AddHealthCheckEntryForm";
-import { OccupationalHealthCareEntryFormValues } from "./AddOccupationalHealthCareEntry";
+import { AddOccupationalHealthCareEntryForm,OccupationalHealthCareEntryFormValues } from "./AddOccupationalHealthCareEntry";
 
 export interface NewEntryPayload {
   entry: Entry
@@ -36,7 +36,7 @@ const AddEntryModal = ({submitNewEntry,error,modalOpen, onClose,entryOptions ,ha
         case TypeEntry.Hospital:
           return <AddHospitalEntryForm  onSubmit={submitNewEntry} onCancel={onClose}/>;
         case TypeEntry.OccupationalHealthcare:
-          return <div>OccupationalHealthcare</div>;
+          return <AddOccupationalHealthCareEntryForm onSubmit={submitNewEntry} onCancel={onClose}/>;
         default:
           return <></>;
       }

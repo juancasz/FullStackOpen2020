@@ -45,9 +45,7 @@ patientRouter.post('/:id/entries',(req,res) => {
                 }
                 break;
             case "OccupationalHealthcare":
-                if (!req.body.sickLeave){
-                    throw new Error("missing field sickLeave")
-                }else{
+                if (req.body.sickLeave){
                     sickLeave = utils.parseSickLeave(req.body.sickLeave)
                 }
                 break;

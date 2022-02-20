@@ -1,6 +1,6 @@
 import React from "react";
 import { Field, Formik, Form } from "formik";
-import { OccupationalHealthcareEntry, SickLeave } from "../types";
+import { OccupationalHealthcareEntry } from "../types";
 import { useStateValue } from "../state";
 import { TextField,DiagnosisSelection } from "../AddPatientModal/FormField";
 import { Grid, Button } from "semantic-ui-react";
@@ -23,7 +23,7 @@ export const AddOccupationalHealthCareEntryForm = ({ onSubmit, onCancel } : Prop
                 specialist: "",
                 diagnosisCodes: [],
                 employerName: "",
-                sickLeave: {} as SickLeave
+                sickLeave: undefined
             }}
             onSubmit={onSubmit}
             validate={values => {
@@ -39,7 +39,7 @@ export const AddOccupationalHealthCareEntryForm = ({ onSubmit, onCancel } : Prop
                   errors.specialist = requiredError;
                 }
                 if (!values.employerName) {
-                    errors.dateDischarge = requiredError;
+                    errors.employerName = requiredError;
                 }
                 return errors;
             }}
@@ -69,17 +69,23 @@ export const AddOccupationalHealthCareEntryForm = ({ onSubmit, onCancel } : Prop
                             setFieldValue={setFieldValue}            
                             setFieldTouched={setFieldTouched}            
                             diagnoses={Object.values(diagnosis)}          
+                        />
+                        <Field
+                            label="Employer Name"
+                            placeholder="Employer Name"
+                            name="employerName"
+                            component={TextField}
                         />   
                         <Field
-                            label="dateDischarge"
+                            label="Start Date"
                             placeholder="YYYY-MM-DD"
-                            name="sicLeave.startDate"
+                            name="sickLeave.startDate"
                             component={TextField}
                         />
                         <Field
-                            label="dateDischarge"
+                            label="End Date"
                             placeholder="YYYY-MM-DD"
-                            name="sicLeave.endDate"
+                            name="sickLeave.endDate"
                             component={TextField}
                         />
                         <Grid>
