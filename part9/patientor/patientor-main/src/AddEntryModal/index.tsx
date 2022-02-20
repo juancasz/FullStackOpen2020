@@ -4,13 +4,14 @@ import { Entry, TypeEntry} from '../types';
 import { EntryTypeOption } from "./FormField";
 import { AddHospitalEntryForm ,HospitalEntryFormValues} from "./AddHospitalEntryForm";
 import { AddHealthCheckEntryForm,HealthCheckEntryFormValues } from "./AddHealthCheckEntryForm";
+import { OccupationalHealthCareEntryFormValues } from "./AddOccupationalHealthCareEntry";
 
 export interface NewEntryPayload {
   entry: Entry
   patientId: string
 }
 
-export type NewEntryFormValue = HealthCheckEntryFormValues | HospitalEntryFormValues;
+export type NewEntryFormValue = HealthCheckEntryFormValues | HospitalEntryFormValues| OccupationalHealthCareEntryFormValues;
 
 interface PropsType{
   type: TypeEntry|undefined
