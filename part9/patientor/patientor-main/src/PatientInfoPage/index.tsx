@@ -3,13 +3,14 @@ import React from "react";
 import { apiBaseUrl } from "../constants";
 import { addPatient, setDiagnosisList, useStateValue } from "../state";
 import { useParams } from "react-router-dom";
-import { Diagnosis, Entry, Patient } from "../types";
+import { Diagnosis, Entry, Patient,TypeEntry } from "../types";
 import { Gender } from "../types";
-import { Message,Icon,Button } from "semantic-ui-react";
+import { Message,Icon,Button,DropdownProps } from "semantic-ui-react";
 import AddEntryModal from "../AddEntryModal";
 import { NewEntryFormValue } from "../AddEntryModal";
 import { NewEntryPayload } from "../AddEntryModal";
 import { addEntry } from "../state";
+import { EntryTypeOption } from "../AddEntryModal/FormField";
 
 
 const PatientInfoPage = () => {
@@ -24,7 +25,25 @@ const PatientInfoPage = () => {
 
     const closeModal = (): void => {
       setModalOpen(false);
+      setType(undefined);
+      setError(undefined);
     };
+
+    const entryOptions: EntryTypeOption[] = [
+        {key: TypeEntry.Hospital, text:TypeEntry.Hospital,value:TypeEntry.Hospital},
+        {key: TypeEntry.HealthCheck, text:TypeEntry.HealthCheck,value:TypeEntry.HealthCheck},
+        {key: TypeEntry.OccupationalHealthcare, text:TypeEntry.OccupationalHealthcare,value:TypeEntry.OccupationalHealthcare}
+    ];
+
+    const [type, setType] = React.useState<TypeEntry|undefined>(undefined);
+
+    const handleChangeType = (    
+      _event: React.SyntheticEvent<HTMLElement, Event>,
+      data: DropdownProps
+    ) => {
+      setType(data.value as TypeEntry);
+    };
+      
 
     const submitNewEntry = async (values: NewEntryFormValue) => {
         try {
@@ -165,6 +184,9 @@ const PatientInfoPage = () => {
                 onClose={closeModal}
                 error={error}
                 submitNewEntry={submitNewEntry}
+                entryOptions={entryOptions}
+                handleChangeType={handleChangeType}
+                type={type}
             />
             <Button style={{marginTop: "1rem"}} onClick={() => openModal()}>Add New Entry</Button>
         </div>

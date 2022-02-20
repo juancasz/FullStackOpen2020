@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal,Dropdown,DropdownProps,Segment } from 'semantic-ui-react';
+import { Modal,Dropdown,Segment,DropdownProps } from 'semantic-ui-react';
 import { Entry, TypeEntry} from '../types';
 import { EntryTypeOption } from "./FormField";
 import { AddHospitalEntryForm ,HospitalEntryFormValues} from "./AddHospitalEntryForm";
@@ -12,33 +12,21 @@ export interface NewEntryPayload {
 
 export type NewEntryFormValue = HealthCheckEntryFormValues | HospitalEntryFormValues;
 
-const entryOptions: EntryTypeOption[] = [
-  {key: TypeEntry.Hospital, text:TypeEntry.Hospital,value:TypeEntry.Hospital},
-  {key: TypeEntry.HealthCheck, text:TypeEntry.HealthCheck,value:TypeEntry.HealthCheck},
-  {key: TypeEntry.OccupationalHealthcare, text:TypeEntry.OccupationalHealthcare,value:TypeEntry.OccupationalHealthcare}
-];
-
 interface PropsType{
   type: TypeEntry|undefined
 }
-
 
 interface Props {
     modalOpen: boolean;
     onClose: () => void;
     error?:string;
     submitNewEntry: (values: NewEntryFormValue) => void;
+    entryOptions: EntryTypeOption[];
+    handleChangeType: ( _event: React.SyntheticEvent<HTMLElement, Event>, data: DropdownProps) =>void ;
+    type: TypeEntry|undefined
 }
 
-const AddEntryModal = ({submitNewEntry,error,modalOpen, onClose }: Props) => {
-    const [type, setType] = React.useState<TypeEntry|undefined>(undefined);
-
-    const handleChangeType = (    
-      _event: React.SyntheticEvent<HTMLElement, Event>,
-      data: DropdownProps
-    ) => {
-      setType(data.value as TypeEntry);
-    };
+const AddEntryModal = ({submitNewEntry,error,modalOpen, onClose,entryOptions ,handleChangeType,type}: Props) => {
 
     const TypeForm = ({type}:PropsType) => {
       switch(type){
