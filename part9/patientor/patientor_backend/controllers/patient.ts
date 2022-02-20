@@ -18,7 +18,7 @@ patientRouter.post('/', (req, res) => {
         res.status(201).send(addedPatient);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }catch(e: any){
-        res.status(400).send(e.message);
+        res.status(400).send({error:e.message});
     }
 });
 
@@ -60,7 +60,7 @@ patientRouter.post('/:id/entries',(req,res) => {
         res.status(201).send(addedEntry);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }catch(e: any){
-        res.status(400).send(e.message);
+        res.status(400).send({error:e.message});
     }
 });
 
