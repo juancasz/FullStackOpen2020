@@ -1,8 +1,13 @@
 import React from "react";
-import { Modal,Dropdown,DropdownProps } from 'semantic-ui-react';
-import { TypeEntry} from '../types';
+import { Modal,Dropdown,DropdownProps,Segment } from 'semantic-ui-react';
+import { Entry, TypeEntry} from '../types';
 import { EntryTypeOption } from "./FormField";
 import { AddHospitalEntryForm ,HospitalEntryFormValues} from "./AddHospitalEntryForm";
+
+export interface NewEntryPayload {
+  entry: Entry
+  patientId: string
+}
 
 const entryOptions: EntryTypeOption[] = [
   {key: TypeEntry.Hospital, text:TypeEntry.Hospital,value:TypeEntry.Hospital},
@@ -18,9 +23,11 @@ interface PropsType{
 interface Props {
     modalOpen: boolean;
     onClose: () => void;
+    error?:string;
+    submitHospitalEntry: (values: HospitalEntryFormValues) => void;
 }
 
-const AddEntryModal = ({modalOpen, onClose }: Props) => {
+const AddEntryModal = ({submitHospitalEntry,error,modalOpen, onClose }: Props) => {
     const [type, setType] = React.useState<TypeEntry|undefined>(undefined);
 
     const handleChangeType = (    
@@ -30,16 +37,12 @@ const AddEntryModal = ({modalOpen, onClose }: Props) => {
       setType(data.value as TypeEntry);
     };
 
-    const submitHospitalEntry = (values: HospitalEntryFormValues) => {
-      console.log(values);
-    };
-
     const TypeForm = ({type}:PropsType) => {
       switch(type){
         case TypeEntry.HealthCheck:
           return <div>HealthCheck</div>;
         case TypeEntry.Hospital:
-          return <AddHospitalEntryForm onSubmit={submitHospitalEntry} onCancel={onClose}/>;
+          return <AddHospitalEntryForm  onSubmit={submitHospitalEntry} onCancel={onClose}/>;
         case TypeEntry.OccupationalHealthcare:
           return <div>OccupationalHealthcare</div>;
         default:
@@ -57,7 +60,9 @@ const AddEntryModal = ({modalOpen, onClose }: Props) => {
             selection
             options={entryOptions}
             onChange={handleChangeType}
+            style={{marginBottom: "1rem"}}
           />
+          {error && <Segment inverted color="red">{`Error: ${error}`}</Segment>}
           <TypeForm type={type}/>
         </Modal.Content>
       </Modal>

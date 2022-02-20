@@ -7,6 +7,9 @@ import { Diagnosis, Entry, Patient } from "../types";
 import { Gender } from "../types";
 import { Message,Icon,Button } from "semantic-ui-react";
 import AddEntryModal from "../AddEntryModal";
+import { HospitalEntryFormValues } from "../AddEntryModal/AddHospitalEntryForm";
+import { NewEntryPayload } from "../AddEntryModal";
+import { addEntry } from "../state";
 
 
 const PatientInfoPage = () => {
@@ -15,12 +18,30 @@ const PatientInfoPage = () => {
     const[patient,setPatient] = React.useState<Patient|undefined>(undefined);
 
     const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+    const [error, setError] = React.useState<string | undefined>();
 
     const openModal = (): void => setModalOpen(true);
 
     const closeModal = (): void => {
       setModalOpen(false);
     };
+
+    const submitHospitalEntry = async (values: HospitalEntryFormValues) => {
+        try {
+          console.log(values);
+          const { data: newEntry } = await axios.post<Entry>(
+            `${apiBaseUrl}/patients/${id}/entries`,
+            values
+          );
+          const newEntryAction :NewEntryPayload = {entry: newEntry,patientId:id};
+          dispatch(addEntry(newEntryAction));
+          closeModal();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (e:any) {
+          console.error(e.response?.data || 'Unknown Error');
+          setError(e.response?.data?.error || 'Unknown error');
+        }
+      };
 
     React.useEffect(() => {
         const getDiagnosisList = async () => {
@@ -143,6 +164,8 @@ const PatientInfoPage = () => {
             <AddEntryModal
                 modalOpen={modalOpen}
                 onClose={closeModal}
+                error={error}
+                submitHospitalEntry={submitHospitalEntry}
             />
             <Button style={{marginTop: "1rem"}} onClick={() => openModal()}>Add New Entry</Button>
         </div>

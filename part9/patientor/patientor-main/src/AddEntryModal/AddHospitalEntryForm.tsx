@@ -21,9 +21,30 @@ export const AddHospitalEntryForm = ({ onSubmit, onCancel } : Props ) => {
                 description: "",
                 date: "",
                 specialist: "",
+                diagnosisCodes: [],
                 discharge: {} as Discharge,
             }}
             onSubmit={onSubmit}
+            validate={values => {
+                const requiredError = "Field is required";
+                const errors: { [field: string]: string } = {};
+                if (!values.description) {
+                  errors.name = requiredError;
+                }
+                if (!values.date) {
+                  errors.ssn = requiredError;
+                }
+                if (!values.specialist) {
+                  errors.dateOfBirth = requiredError;
+                }
+                if (!values.discharge.date) {
+                    errors.dateOfBirth = requiredError;
+                }
+                if (!values.discharge.criteria) {
+                    errors.dateOfBirth = requiredError;
+                }
+                return errors;
+            }}
         >
             {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
                 return(
@@ -51,6 +72,18 @@ export const AddHospitalEntryForm = ({ onSubmit, onCancel } : Props ) => {
                             setFieldTouched={setFieldTouched}            
                             diagnoses={Object.values(diagnosis)}          
                         />   
+                        <Field
+                            label="dateDischarge"
+                            placeholder="YYYY-MM-DD"
+                            name="discharge.date"
+                            component={TextField}
+                        />
+                        <Field
+                            label="criteriaDischarge"
+                            placeholder="criteria discharge"
+                            name="discharge.criteria"
+                            component={TextField}
+                        />
                         <Grid>
                             <Grid.Column floated="left" width={5}>
                                 <Button type="button" onClick={onCancel} color="red">

@@ -1,5 +1,6 @@
 import { State } from "./state";
-import { Diagnosis, Patient } from "../types";
+import { Diagnosis, Patient} from "../types";
+import { NewEntryPayload } from "../AddEntryModal";
 
 export const setPatientList = (payload:Patient[]):Action => {
   return(
@@ -28,6 +29,15 @@ export const addPatient = (payload:Patient):Action => {
   );
 };
 
+export const addEntry = (payload:NewEntryPayload):Action => {
+  return(
+    {
+      type: "ADD_ENTRY",
+      payload: payload
+    }
+  );
+};
+
 export type Action =
   | {
       type: "SET_PATIENT_LIST";
@@ -39,7 +49,11 @@ export type Action =
     }
   | {
       type: "SET_DIAGNOSIS_LIST";
-      payload: Diagnosis[]
+      payload: Diagnosis[];
+  }
+  | {
+      type: "ADD_ENTRY";
+      payload: NewEntryPayload;
   };
 
 export const reducer = (state: State, action: Action): State => {
@@ -72,6 +86,16 @@ export const reducer = (state: State, action: Action): State => {
             {}
           ),
           ...state.diagnosis
+        }
+      };
+    case "ADD_ENTRY":
+      const patient: Patient =  state.patients[action.payload.patientId];
+      patient.entries.push(action.payload.entry);
+      return {
+        ...state,
+        patients:{
+          ...state.patients,
+          [action.payload.patientId]:patient
         }
       };
     default:
